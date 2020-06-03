@@ -5,8 +5,8 @@ const pgp = require("pg-promise")({
 });
 
 const options = {
-  host: process.env.HOST,
-  database: process.env.DATABASE,
+  host: 'localhost',
+  database: 'whosnext',
 };
 
 const db = pgp(options);

@@ -5,6 +5,8 @@ const logger = require("morgan");
 const compression = require("compression");
 const helmet = require("helmet");
 const cors = require("cors");
+require("passport");
+require("./auth/auth");
 
 require("dotenv").config();
 
