@@ -6,18 +6,17 @@ const bcrypt = require("bcryptjs");
 const Model = require("../models/users");
 
 passport.use("local-signup", new localStrategy({
-  usernameField: "email",
+  usernameField: "username",
   passwordField: "password",
   passReqToCallback: true
 },
-  async (req, email, password, done) => {
-    console.log(req.body)
+  async (req, username, password, done) => {
     try{
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt)
 
-      const { firstName, lastName } = req.body;
-      const user = new UserModel(email, hash, firstName, lastName);
+      const { firstName, lastName, isInstructor } = req.body;
+      const user = new UserModel(username, hash, firstName, lastName, isInstructor);
       const res = await user.signup();
       return done(null, res)
     } catch (error){
@@ -27,15 +26,15 @@ passport.use("local-signup", new localStrategy({
 ))
 
 passport.use("login", new localStrategy({
-  usernameField: "email",
+  usernameField: "username",
   passwordField: "password"
 },
-  async (email, password, done) => {
+  async (username, password, done) => {
     try{
-      const user = new Model(email, password, '', '');
+      const user = new Model(username, password, '', '');
       const res = await user.login();
       if(!user) {
-        return done(null, false, {message: 'Email is not registered'})
+        return done(null, false, {message: 'username is not registered'})
       }
       const isValid = await user.checkPassword(password);
       if(!isValid) {

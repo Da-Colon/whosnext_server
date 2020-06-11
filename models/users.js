@@ -3,16 +3,18 @@ const bcrypt = require("bcryptjs");
 
 class User {
   constructor(
-    email,
+    user_name,
     password,
     first_name,
-    last_name
+    last_name,
+    isInstructor
   )
     {
-      this.email = email;
+      this.userName = user_name;
       this.password = password;
       this.firstName = first_name;
       this.lastName = last_name;
+      this.isInstructor = isInstructor;
     }
 
     async checkPassword(hashedPassword) {
@@ -21,7 +23,7 @@ class User {
 
     async login() {
       try{
-        return await db.one(`SELECT * FROM users WHERE email = $1`, [this.email]);
+        return await db.one(`SELECT * FROM users WHERE user_name = $1`, [this.userName]);
       } catch(error) {
         console.log(error);
       }
@@ -29,7 +31,7 @@ class User {
 
     async signup() {
       try{
-        return await db.result(`INSERT INTO users (email, password, first_name, last_name) VALUES (1$, 2$, 3$, 4$)`, [this.email. this.password, this.firstName, this.lastName])
+        return await db.result(`INSERT INTO users (user_name, password, first_name, last_name) VALUES (1$, 2$, 3$, 4$)`, [this.userName. this.password, this.firstName, this.lastName, this.isInstructor])
       } catch(error){
         console.log(error);
       }
