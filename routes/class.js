@@ -1,34 +1,20 @@
-const fs = require("fs");
-const express = require("express");
-const multer = require("multer");
-const csv = require("fast-csv");
+const express = require('express')
 const router = express.Router();
-const upload = multer({ dest: "../tmp/csv/" });
-const sortData = require('../controllers/parseCSVData')
-const {validateCsvData} = require('../controllers/csvValidation')
+const Class = require('../models/class')
 
-router.post("/upload-csv", upload.single("file"), function (req, res) {
-  const fileRows = [];
-  csv.parseFile(req.file.path)
-  .on("data", function (data) {
-      fileRows.push(data); // push each row
-    })
-    .on("end", function () {
-      fs.unlinkSync(req.file.path);   // remove temp file
-      //process "fileRows" and respond
-      const validationError = validateCsvData(fileRows);
-      if (validationError) {
-        return res.status(403).json({ error: validationError });
+router.post('/newclass' ,(res, req, next) => {
+  const {className, classList, userId} = req.body;
+  try{
+    const createClass = new Class(className, userId)
+    if(createClass){
+      for(student in classList){
+        const query = new ClassMate
       }
-      const classList = sortData(fileRows);
-      console.log(classList);
-      return res.json({ classList })
-    })
-});
+    }
+  } catch(error){
+    return error
+  }
 
-router.get("/", function (req, res, next) {
-  res.sendStatus(200);
-});
-
-
-module.exports = router;
+  // edit class route
+  // delete class route
+})

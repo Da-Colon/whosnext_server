@@ -12,7 +12,8 @@ require("dotenv").config();
 
 // ROUTERS
 const usersRouter = require("./routes/users");
-const classRouter = require("./routes/class");
+const CSVRouter = require("./routes/csvUpload")
+// const classRouter = require("./routes/class");
 
 
 const corsOptions = {
@@ -40,6 +41,7 @@ app.use(express.static(path.join(__dirname, "public/")));
 
 
 app.use("/", usersRouter);
-app.use("/", classRouter);
+app.use("/", CSVRouter);
+// app.use("/", classRouter);
 
 module.exports = app;

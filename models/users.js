@@ -28,8 +28,11 @@ class User {
     }
 
     async signup() {
-      return await db.result(`INSERT INTO users (email, password, first_name, last_name) VALUES (1$, 2$, 3$, 4$)`, [this.email. this.password, this.firstName, this.lastName]
-      );
+      try{
+        return await db.result(`INSERT INTO users (email, password, first_name, last_name) VALUES (1$, 2$, 3$, 4$)`, [this.email. this.password, this.firstName, this.lastName])
+      } catch(error){
+        console.log(error);
+      }
     }
 }
 
