@@ -1,0 +1,55 @@
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const Model = require("../models/users");
+
+exports.LOGIN_USER_POST = (req, res, next) => {
+  passport.authenticate("login", async (err, user) => {
+    try {
+      if (err || !user) {
+        const error = new Error("Login Error");
+        return console.log(error);
+      }
+      req.login(user, { session: false }, async (error) => {
+        if (error) return next(error);
+        const body = {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          isInstructor: user.isInstructor,
+          instructorId: user.instructorId,
+        };
+        const token = jwt.sign({ user: body }, process.env.SECRET_TOKEN);
+        return res.status(200).json({ user: user });
+      });
+    } catch (error) {
+      return console.log(error);
+    }
+  })(req, res, next);
+};
+
+exports.REGISTER_USER_POST = (req, res, next) => {
+  passport.authenticate("signup", async (error, user, userId) => {
+    if (error) {
+      return res.status(500).json({ message: "There was a server error" });
+    }
+    const body = {
+      id: userId,
+      first_name: user.firstName,
+      last_name: user.lastName,
+      isInstructor: user.isInstructor,
+      instructorId: user.instructorId,
+    };
+    res.status(200).json({ user: body });
+  })(req, res, next);
+};
+
+exports.INSTRUCTORS_GET = async (req, res, next) => {
+  try {
+    const response = await Model.allInstructors();
+    await console.log(response);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};

@@ -5,7 +5,7 @@ const ExtractJWT = require('passport-jwt').ExtractJwt
 const bcrypt = require("bcryptjs");
 const Model = require("../models/users");
 
-passport.use("local-signup", new localStrategy({
+passport.use("signup", new localStrategy({
   usernameField: "username",
   passwordField: "password",
   passReqToCallback: true
@@ -14,11 +14,10 @@ passport.use("local-signup", new localStrategy({
     try{
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt)
-
-      const { firstName, lastName, isInstructor } = req.body;
-      const user = new UserModel(username, hash, firstName, lastName, isInstructor);
+      const { firstName, lastName, isInstructor, instructorId } = req.body;
+      const user = new Model(username, hash, firstName, lastName, isInstructor, instructorId);
       const res = await user.signup();
-      return done(null, res)
+      return done(null, user, res)
     } catch (error){
       done(error)
     }

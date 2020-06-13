@@ -7,7 +7,8 @@ class User {
     password,
     first_name,
     last_name,
-    isInstructor
+    isInstructor,
+    instructorId
   )
     {
       this.userName = user_name;
@@ -15,6 +16,7 @@ class User {
       this.firstName = first_name;
       this.lastName = last_name;
       this.isInstructor = isInstructor;
+      this.instructorId = instructorId;
     }
 
     async checkPassword(hashedPassword) {
@@ -31,9 +33,18 @@ class User {
 
     async signup() {
       try{
-        return await db.result(`INSERT INTO users (user_name, password, first_name, last_name) VALUES (1$, 2$, 3$, 4$)`, [this.userName. this.password, this.firstName, this.lastName, this.isInstructor])
+        const query =  await db.result(`INSERT INTO users (user_name, password, first_name, last_name, is_instructor, instructor_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`, [this.userName, this.password, this.firstName, this.lastName, this.isInstructor, this.instructorId])
+        return query.rows[0].id
       } catch(error){
-        console.log(error);
+        return error;
+      }
+    }
+
+    static allInstructors  = async () => {
+      try{
+        return await db.any(`SELECT id, first_name, last_name FROM users WHERE is_instructor = true`)
+      } catch(error){
+        return console.log('Error', error)
       }
     }
 }

@@ -1,37 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("passport");
-const jwt = require('jsonwebtoken')
+const users_controllers = require('../controllers/users')
 
-router.post("/users/login", function (req, res, next) {
-  passport.authenticate("login", async (err, user) => {
-    try {
-      if (err || !user) {
-        const error = new Error("Login Error");
-        return next(error);
-      }
-      req.login(user, { session: false }, async (error) => {
-        if (error) return next(error);
-        console.log(user);
-        const body = { id: user.id, first_name: user.first_name, last_name: user.last_name };
-        const token = jwt.sign({ user: body }, process.env.SECRET_TOKEN);
-        return res.status(200).json({'user': user});
-      });
-    } catch (error) {
-      return next(error);
-    }
-  })(req, res, next);
-});
+router.post("/users/login", users_controllers.LOGIN_USER_POST);
 
-router.post(
-  "/signup",
-  passport.authenticate("local-signup", { session: false }),
-  (req, res, next) => {
-    try{
-      res.status(200).json({ message: "Sign up successful" });
-    } catch (error){
-      return next(error)
-    }
-  }
-);
+router.post("/users/register", users_controllers.REGISTER_USER_POST);
+
+router.get("/users/instructors", users_controllers.INSTRUCTORS_GET)
 module.exports = router;
