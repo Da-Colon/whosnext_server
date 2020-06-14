@@ -13,13 +13,14 @@ exports.LOGIN_USER_POST = (req, res, next) => {
         if (error) return next(error);
         const body = {
           id: user.id,
+          user_name: user.user_name,
           first_name: user.first_name,
           last_name: user.last_name,
-          isInstructor: user.isInstructor,
-          instructorId: user.instructorId,
+          is_instructor: user.is_instructor,
+          instructor_id: user.instructor_id,
         };
         const token = jwt.sign({ user: body }, process.env.SECRET_TOKEN);
-        return res.status(200).json({ user: user });
+        return res.status(200).json({ user: body });
       });
     } catch (error) {
       return console.log(error);

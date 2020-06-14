@@ -1,28 +1,32 @@
 const db = require("./conn");
 
 class Class {
-  constructor(className, userId){
+  constructor(className, classList, userId) {
     this.className = className;
-    this.userId = user_id
-
+    this.classList = classList;
+    this.userId = userId;
   }
 
   async getUserClasses() {
-    try{
-      const response = await db.any('SELECT * from class_name WHERE user_id = user.id($1)', [this.user_id])
-      return response;
-    } catch{
-      return "Error Finding Classes"
+    try {
+      return await db.any("SELECT * from class_list WHERE users_id = $1;", [
+        this.userId,
+      ]);
+    } catch {
+      return "Error Finding Classes";
     }
   }
 
   async newClass() {
-    const classNameLists = getUsersClasses();
-    if(!classNameLists.includes(this.className)){
-      const query = await db.result('INSERT INTO class_name (name, user_id) VALUES ($1, $2)', [this.className, this.user_Id]);
+    try {
+      const query = await db.result(
+        "INSERT INTO class_list (name, class_list, users_id) VALUES ($1, $2, $3);",
+        [this.className, this.classList, this.userId]
+      );
       return query;
+    } catch {
+      return "Error Class already exists";
     }
-    return;
   }
 }
 

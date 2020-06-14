@@ -25,7 +25,7 @@ class User {
 
     async login() {
       try{
-        return await db.one(`SELECT * FROM users WHERE user_name = $1`, [this.userName]);
+        return await db.one(`SELECT * FROM users WHERE user_name = $1;`, [this.userName]);
       } catch(error) {
         console.log(error);
       }

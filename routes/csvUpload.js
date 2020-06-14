@@ -9,13 +9,13 @@ const {validateCsvData} = require('../controllers/csvValidation')
 
 router.post("/upload-csv", upload.single("file"), function (req, res) {
   const fileRows = [];
+  console.log(req.file)
   csv.parseFile(req.file.path)
   .on("data", function (data) {
-      fileRows.push(data); // push each row
+      fileRows.push(data);
     })
     .on("end", function () {
-      fs.unlinkSync(req.file.path);   // remove temp file
-      //process "fileRows" and respond
+      fs.unlinkSync(req.file.path);  
       const validationError = validateCsvData(fileRows);
       if (validationError) {
         return res.status(403).json({ error: validationError });
