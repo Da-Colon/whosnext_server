@@ -17,7 +17,7 @@ exports.LOGIN_USER_POST = (req, res, next) => {
           first_name: user.first_name,
           last_name: user.last_name,
           is_instructor: user.is_instructor,
-          instructor_id: user.instructor_id,
+          prefered_class_list: user.pref_class_list
         };
         const token = jwt.sign({ user: body }, process.env.SECRET_TOKEN);
         return res.status(200).json({ user: body });

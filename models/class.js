@@ -7,11 +7,10 @@ class Class {
     this.userId = userId;
   }
 
-  async getUserClasses() {
+  static async getClasses() {
     try {
-      return await db.any("SELECT * from class_list WHERE users_id = $1;", [
-        this.userId,
-      ]);
+      const query = await db.any("SELECT * FROM class_list;");
+      return query
     } catch {
       return "Error Finding Classes";
     }
@@ -20,14 +19,40 @@ class Class {
   async newClass() {
     try {
       const query = await db.result(
-        "INSERT INTO class_list (name, class_list, users_id) VALUES ($1, $2, $3);",
+        "INSERT INTO class_list (name, class_list, users_id) VALUES ($1, $2, $3) RETURNING *;",
         [this.className, this.classList, this.userId]
       );
-      return query;
-    } catch {
-      return "Error Class already exists";
+      const {id} = await query;
+      this.newDefaultClass(id, this.userId);
+
+      return await query;
+    } catch (error){
+      console.log("Error Class already exists")
+      return error
+    }
+  }
+
+  static async newDefaultClass(id, userId) {
+    try{
+      await db.any("UPDATE user SET pref_class_list = $1 WHERE user_id = $2;", [id, userId])
+      return;
+    } catch (error){
+      console.log(error)
+      return error
+    }
+  }
+
+  static async getDefaultClass(id) {
+    try{
+      const query = await db.one("SELECT * FROM class_list WHERE id = $1;", [id])
+      return await query
+    } catch(error){
+      console.log(error)
+      return error
     }
   }
 }
+
+
 
 module.exports = Class;
