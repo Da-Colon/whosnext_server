@@ -44,7 +44,17 @@ class User {
       try{
         return await db.any(`SELECT id, first_name, last_name FROM users WHERE is_instructor = true`)
       } catch(error){
-        return console.log('Error', error)
+        return error
+      }
+    }
+
+    static async newDefaultClass(id, userId) {
+      try{
+        const query = await db.one("UPDATE users SET pref_class_list = $1 WHERE id = $2 RETURNING *;", [id, userId])
+        return query;
+      } catch (error){
+        console.log(error)
+        return error
       }
     }
 }
