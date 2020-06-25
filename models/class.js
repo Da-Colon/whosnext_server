@@ -18,26 +18,13 @@ class Class {
 
   async newClass() {
     try {
-      const query = await db.result(
+      const query = await db.one(
         "INSERT INTO class_list (name, class_list, users_id) VALUES ($1, $2, $3) RETURNING *;",
         [this.className, this.classList, this.userId]
       );
-      const {id} = await query;
-      this.newDefaultClass(id, this.userId);
-
-      return await query;
+      return query;
     } catch (error){
       console.log("Error Class already exists")
-      return error
-    }
-  }
-
-  static async newDefaultClass(id, userId) {
-    try{
-      await db.any("UPDATE user SET pref_class_list = $1 WHERE user_id = $2;", [id, userId])
-      return;
-    } catch (error){
-      console.log(error)
       return error
     }
   }
@@ -47,6 +34,16 @@ class Class {
       const query = await db.one("SELECT * FROM class_list WHERE id = $1;", [id])
       return await query
     } catch(error){
+      console.log(error)
+      return error;
+    }
+  }
+
+  static async editClassList(classId, className, classList, editedById) {
+    try{
+      const query = await db.one("UPDATE class_list SET name = $1, class_list = $2, lastEditedBy = $3 WHERE id = $4 RETURNING *;", [className, classList, editedById, classId])
+      return query;
+    } catch (error) {
       console.log(error)
       return error
     }

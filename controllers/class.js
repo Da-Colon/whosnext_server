@@ -1,13 +1,13 @@
 const Model = require('../models/class')
 
-exports.POST_NEW_CLASS = async (req, res, next) => {
-  const {className, classList, userId} = req.body;
+exports.POST_NEW_CLASS = async (req, res) => {
+  const {className, classList, createdById} = req.body;
   try{
-    const cohort = new Model(className, classList, userId)
-    cohort.newClass();
-    return res.status(200).json({message: 'Class Saved Successfully'})
+    const cohort = new Model(className, classList, createdById)
+    const newCohort = await cohort.newClass();
+    return res.status(200).json(newCohort)
   } catch(error){
-    return error
+    return res.status(400).json({message: 'There was a problem adding new class'})
   }
 }
 
@@ -21,22 +21,25 @@ exports.GET_ALL_CLASSES = async (req, res) => {
 }
 
 exports.GET_DEFAULT_CLASS = async (req, res) => {
-  const { prefered_class_list  } = req.body;
-  console.log(req.body)
-  const query = await Model.getDefaultClass(prefered_class_list);
-  return res.status(200).json(query)
-}
-
-exports.PUT_UPDATE_DEFAULT_CLASS = async (req, res) => {
-  const {userId, classListId} = req.body;
   try{
-    const query = await Model.newDefaultClass(classListId, userId)
-    return res.status(200)
-  } catch(error) {
+    const { prefered_class_list  } = req.body;
+    const query = await Model.getDefaultClass(prefered_class_list);
+    return res.status(200).json(query)
+
+  } catch (error){
     console.log(error)
     return res.status(401)
   }
 }
 
-  // edit class route
+exports.PUT_EDIT_CLASS_LIST = async (req, res) => {
+  const {class_id} = req.params;
+  const {className, classList, editedBy } = req.body
+  try {
+  const editedClass = await Model.editClassList( parseInt(class_id), className, classList, editedBy )
+  return res.status(200).json(editedClass)
+  } catch {
+    return res.status(401)
+  }
+}
   // delete class route
