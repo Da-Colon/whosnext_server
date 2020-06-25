@@ -24,7 +24,6 @@ class Class {
       );
       return query;
     } catch (error){
-      console.log("Error Class already exists")
       return error
     }
   }
@@ -32,9 +31,8 @@ class Class {
   static async getDefaultClass(id) {
     try{
       const query = await db.one("SELECT * FROM class_list WHERE id = $1;", [id])
-      return await query
+      return query
     } catch(error){
-      console.log(error)
       return error;
     }
   }
@@ -44,7 +42,6 @@ class Class {
       const query = await db.one("UPDATE class_list SET name = $1, class_list = $2, lastEditedBy = $3 WHERE id = $4 RETURNING *;", [className, classList, editedById, classId])
       return query;
     } catch (error) {
-      console.log(error)
       return error
     }
   }

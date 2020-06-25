@@ -23,7 +23,7 @@ exports.LOGIN_USER_POST = (req, res, next) => {
         return res.status(200).json({ user: body });
       });
     } catch (error) {
-      return console.log(error);
+      return res.status(500).json({ message: "There was a server error" });
     }
   })(req, res, next);
 };
@@ -50,7 +50,7 @@ exports.INSTRUCTORS_GET = async (req, res, next) => {
     res.status(200).json(response);
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    return res.status(500);
   }
 };
 
@@ -59,9 +59,9 @@ exports.PUT_UPDATE_DEFAULT_CLASS = async (req, res) => {
   const {userId} = req.body;
   try {
     const userUpdated = await Model.newDefaultClass(class_id, userId)
-    return res.status(200).json(userUpdated)
+    res.status(200).json(userUpdated)
   } catch(error) {
     console.log(error)
-    return res.status(401)
+    return res.status(500)
   }
 }
