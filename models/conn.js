@@ -4,9 +4,11 @@ const pgp = require("pg-promise")({
   }
 });
 
+pgp.pg.defaults.ssl = true;
+
 const options = {
   host: 'localhost',
-  database: 'whosnext',
+  database: 'postgresql-graceful-06195',
 };
 
 const db = pgp(options);
