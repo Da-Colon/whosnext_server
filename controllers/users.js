@@ -38,7 +38,6 @@ exports.REGISTER_USER_POST = (req, res, next) => {
       first_name: user.firstName,
       last_name: user.lastName,
       isInstructor: user.isInstructor,
-      instructorId: user.instructorId,
     };
     res.status(200).json({ user: body });
   })(req, res, next);

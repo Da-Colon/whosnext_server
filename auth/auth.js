@@ -14,8 +14,8 @@ passport.use("signup", new localStrategy({
     try{
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt)
-      const { firstName, lastName, isInstructor, instructorId } = req.body;
-      const user = new Model(username, hash, firstName, lastName, isInstructor, instructorId);
+      const { firstName, lastName, isInstructor } = req.body;
+      const user = new Model(username, hash, firstName, lastName, isInstructor);
       const res = await user.signup();
       return done(null, user, res)
     } catch (error){

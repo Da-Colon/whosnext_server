@@ -4,13 +4,15 @@ const pgp = require("pg-promise")({
   }
 });
 
-pgp.pg.defaults.ssl = true;
+pgp.pg.defaults.ssl = {rejectUnauthorized: false}
 
-const options = {
-  host: 'localhost',
-  database: 'postgresql-graceful-06195',
-};
+// const options = {
+//   host: process.env.DATABASE_URL["host"],
+//   database: process.env.DATABASE_URL["database"],
+//   user: process.env.DATABASE_URL["user"],
+//   password: process.env.DATABASE_URL["pass"]
+// };
 
-const db = pgp(options);
+const db = pgp(process.env.DATABASE_URL);
 
 module.exports = db;
